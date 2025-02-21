@@ -10,8 +10,8 @@ $BLUE = "`e[34m"
 $NC = "`e[0m"
 
 # 配置文件路径
-$STORAGE_FILE = "$env:APPDATA\Cursor\User\globalStorage\storage.json"
-$BACKUP_DIR = "$env:APPDATA\Cursor\User\globalStorage\backups"
+$STORAGE_FILE = "D:\Scoop\persist\cursor\data\user-data\User\globalStorage\storage.json"
+$BACKUP_DIR = "D:\Scoop\persist\cursor\data\user-data\User\globalStorage\backups"
 
 # 检查管理员权限
 function Test-Administrator {
