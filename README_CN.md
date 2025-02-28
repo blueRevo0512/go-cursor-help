@@ -298,8 +298,8 @@ macOS/Linux 用户可以尝试在系统中找到类似的`cursor-updater`目录�
 </td>
 <td align="center">
 <b>微信交流群</b><br>
-<img src="img/wx_group3.png" width="250" alt="微信群二维码"><br>
-<small>7天内(2月19日前)有效，群满可以加公众号关注最新动态</small>
+<img src="img/wx_group4.jpg" width="250" alt="微信群二维码"><br>
+<small>7天内(3月1日前)有效，群满可以加公众号关注最新动态</small>
 </td>
 <td align="center">
 <b>公众号</b><br>

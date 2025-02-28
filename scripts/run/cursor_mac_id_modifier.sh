@@ -556,28 +556,48 @@ show_follow_info() {
 # 禁用自动更新
 disable_auto_update() {
     local updater_path="$HOME/Library/Application Support/Caches/cursor-updater"
+    local app_update_yml="/Applications/Cursor.app/Contents/Resources/app-update.yml"
     
     echo
     log_info "正在禁用 Cursor 自动更新..."
-    echo -e "${YELLOW}如果需要恢复自动更新，可以手动删除文件：${NC}"
-    echo -e "${BLUE}$updater_path${NC}"
-    echo
     
-    # 尝试自动执行
+    # 备份并清空 app-update.yml
+    if [ -f "$app_update_yml" ]; then
+        log_info "备份并修改 app-update.yml..."
+        if ! sudo cp "$app_update_yml" "${app_update_yml}.bak" 2>/dev/null; then
+            log_warn "备份 app-update.yml 失败，继续执行..."
+        fi
+        
+        if sudo bash -c "echo '' > \"$app_update_yml\"" && \
+           sudo chmod 444 "$app_update_yml"; then
+            log_info "成功禁用 app-update.yml"
+        else
+            log_error "修改 app-update.yml 失败，请手动执行以下命令："
+            echo -e "${BLUE}sudo cp \"$app_update_yml\" \"${app_update_yml}.bak\"${NC}"
+            echo -e "${BLUE}sudo bash -c 'echo \"\" > \"$app_update_yml\"'${NC}"
+            echo -e "${BLUE}sudo chmod 444 \"$app_update_yml\"${NC}"
+        fi
+    else
+        log_warn "未找到 app-update.yml 文件"
+    fi
+    
+    # 同时也处理 cursor-updater
+    log_info "处理 cursor-updater..."
     if sudo rm -rf "$updater_path" && \
        sudo touch "$updater_path" && \
        sudo chmod 444 "$updater_path"; then
-        log_info "成功禁用自动更新"
-        echo
-        log_info "验证方法："
-        echo "运行命令：ls -l \"$updater_path\""
-        echo "确认文件权限显示为：r--r--r--"
+        log_info "成功禁用 cursor-updater"
     else
-        log_error "自动设置失败，请手动执行以下命令："
-        echo
+        log_error "禁用 cursor-updater 失败，请手动执行以下命令："
         echo -e "${BLUE}sudo rm -rf \"$updater_path\" && sudo touch \"$updater_path\" && sudo chmod 444 \"$updater_path\"${NC}"
     fi
     
+    echo
+    log_info "验证方法："
+    echo "1. 运行命令：ls -l \"$updater_path\""
+    echo "   确认文件权限显示为：r--r--r--"
+    echo "2. 运行命令：ls -l \"$app_update_yml\""
+    echo "   确认文件权限显示为：r--r--r--"
     echo
     log_info "完成后请重启 Cursor"
 }
