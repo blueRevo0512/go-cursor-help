@@ -11,13 +11,13 @@ import (
 	"runtime/debug"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/yuaotian/go-cursor-help/internal/config"
 	"github.com/yuaotian/go-cursor-help/internal/lang"
 	"github.com/yuaotian/go-cursor-help/internal/process"
 	"github.com/yuaotian/go-cursor-help/internal/ui"
 	"github.com/yuaotian/go-cursor-help/pkg/idgen"
-
-	"github.com/sirupsen/logrus"
 )
 
 // Global variables
@@ -29,7 +29,15 @@ var (
 )
 
 func main() {
-	setupErrorRecovery()
+	// Place defer at the beginning of main to ensure it can catch panics from all subsequent function calls
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("Panic recovered: %v\n", r)
+			debug.PrintStack()
+			waitExit()
+		}
+	}()
+
 	handleFlags()
 	setupLogger()
 
@@ -71,16 +79,6 @@ func main() {
 	if os.Getenv("AUTOMATED_MODE") != "1" {
 		waitExit()
 	}
-}
-
-func setupErrorRecovery() {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Errorf("Panic recovered: %v\n", r)
-			debug.PrintStack()
-			waitExit()
-		}
-	}()
 }
 
 func handleFlags() {

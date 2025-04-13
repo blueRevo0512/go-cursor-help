@@ -85,7 +85,7 @@ function Get-CursorVersion {
 $cursorVersion = Get-CursorVersion
 Write-Host ""
 
-Write-Host "$YELLOW[重要提示]$NC 最新的 0.45.x (以支持)"
+Write-Host "$YELLOW[重要提示]$NC 最新的 0.47.x (以支持)"
 Write-Host ""
 
 # 检查并关闭 Cursor 进程
@@ -200,42 +200,51 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 
 function Update-MachineGuid {
     try {
-        # 先检查注册表路径是否存在
+        # 检查注册表路径是否存在，不存在则创建
         $registryPath = "HKLM:\SOFTWARE\Microsoft\Cryptography"
         if (-not (Test-Path $registryPath)) {
-            throw "注册表路径不存在: $registryPath"
+            Write-Host "$YELLOW[警告]$NC 注册表路径不存在: $registryPath，正在创建..."
+            New-Item -Path $registryPath -Force | Out-Null
+            Write-Host "$GREEN[信息]$NC 注册表路径创建成功"
         }
 
-        # 获取当前的 MachineGuid
-        $currentGuid = Get-ItemProperty -Path $registryPath -Name MachineGuid -ErrorAction Stop
-        if (-not $currentGuid) {
-            throw "无法获取当前的 MachineGuid"
+        # 获取当前的 MachineGuid，如果不存在则使用空字符串作为默认值
+        $originalGuid = ""
+        try {
+            $currentGuid = Get-ItemProperty -Path $registryPath -Name MachineGuid -ErrorAction SilentlyContinue
+            if ($currentGuid) {
+                $originalGuid = $currentGuid.MachineGuid
+                Write-Host "$GREEN[信息]$NC 当前注册表值："
+                Write-Host "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography" 
+                Write-Host "    MachineGuid    REG_SZ    $originalGuid"
+            } else {
+                Write-Host "$YELLOW[警告]$NC MachineGuid 值不存在，将创建新值"
+            }
+        } catch {
+            Write-Host "$YELLOW[警告]$NC 获取 MachineGuid 失败: $($_.Exception.Message)"
         }
-
-        $originalGuid = $currentGuid.MachineGuid
-        Write-Host "$GREEN[信息]$NC 当前注册表值："
-        Write-Host "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography" 
-        Write-Host "    MachineGuid    REG_SZ    $originalGuid"
 
         # 创建备份目录（如果不存在）
         if (-not (Test-Path $BACKUP_DIR)) {
             New-Item -ItemType Directory -Path $BACKUP_DIR -Force | Out-Null
         }
 
-        # 创建备份文件
-        $backupFile = "$BACKUP_DIR\MachineGuid_$(Get-Date -Format 'yyyyMMdd_HHmmss').reg"
-        $backupResult = Start-Process "reg.exe" -ArgumentList "export", "`"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography`"", "`"$backupFile`"" -NoNewWindow -Wait -PassThru
-        
-        if ($backupResult.ExitCode -eq 0) {
-            Write-Host "$GREEN[信息]$NC 注册表项已备份到：$backupFile"
-        } else {
-            Write-Host "$YELLOW[警告]$NC 备份创建失败，继续执行..."
+        # 创建备份文件（仅当原始值存在时）
+        if ($originalGuid) {
+            $backupFile = "$BACKUP_DIR\MachineGuid_$(Get-Date -Format 'yyyyMMdd_HHmmss').reg"
+            $backupResult = Start-Process "reg.exe" -ArgumentList "export", "`"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography`"", "`"$backupFile`"" -NoNewWindow -Wait -PassThru
+            
+            if ($backupResult.ExitCode -eq 0) {
+                Write-Host "$GREEN[信息]$NC 注册表项已备份到：$backupFile"
+            } else {
+                Write-Host "$YELLOW[警告]$NC 备份创建失败，继续执行..."
+            }
         }
 
         # 生成新GUID
         $newGuid = [System.Guid]::NewGuid().ToString()
 
-        # 更新注册表
+        # 更新或创建注册表值
         Set-ItemProperty -Path $registryPath -Name MachineGuid -Value $newGuid -Force -ErrorAction Stop
         
         # 验证更新
@@ -252,8 +261,8 @@ function Update-MachineGuid {
     catch {
         Write-Host "$RED[错误]$NC 注册表操作失败：$($_.Exception.Message)"
         
-        # 尝试恢复备份
-        if ($backupFile -and (Test-Path $backupFile)) {
+        # 尝试恢复备份（如果存在）
+        if (($backupFile -ne $null) -and (Test-Path $backupFile)) {
             Write-Host "$YELLOW[恢复]$NC 正在从备份恢复..."
             $restoreResult = Start-Process "reg.exe" -ArgumentList "import", "`"$backupFile`"" -NoNewWindow -Wait -PassThru
             
@@ -529,42 +538,11 @@ function Write-ConfigFile {
     }
 }
 
-function Compare-Version {
-    param (
-        [string]$version1,
-        [string]$version2
-    )
-    
-    try {
-        $v1 = [version]($version1 -replace '[^\d\.].*$')
-        $v2 = [version]($version2 -replace '[^\d\.].*$')
-        return $v1.CompareTo($v2)
-    }
-    catch {
-        Write-Host "$RED[错误]$NC 版本比较失败: $_"
-        return 0
-    }
-}
-
-# 在主流程开始时添加版本检查
-Write-Host "$GREEN[信息]$NC 正在检查 Cursor 版本..."
+# 获取并显示版本信息
 $cursorVersion = Get-CursorVersion
-
+Write-Host ""
 if ($cursorVersion) {
-    $compareResult = Compare-Version $cursorVersion "0.45.0"
-    if ($compareResult -ge 0) {
-        Write-Host "$RED[错误]$NC 当前版本 ($cursorVersion) 暂不支持"
-        Write-Host "$YELLOW[建议]$NC 请使用 v0.44.11 及以下版本"
-        Write-Host "$YELLOW[建议]$NC 可以从以下地址下载支持的版本:"
-        Write-Host "Windows: https://download.todesktop.com/230313mzl4w4u92/Cursor%20Setup%200.44.11%20-%20Build%20250103fqxdt5u9z-x64.exe"
-        Write-Host "Mac ARM64: https://dl.todesktop.com/230313mzl4w4u92/versions/0.44.11/mac/zip/arm64"
-        Read-Host "按回车键退出"
-        exit 1
-    }
-    else {
-        Write-Host "$GREEN[信息]$NC 当前版本 ($cursorVersion) 支持重置功能"
-    }
-}
-else {
+    Write-Host "$GREEN[信息]$NC 检测到 Cursor 版本: $cursorVersion，继续执行..."
+} else {
     Write-Host "$YELLOW[警告]$NC 无法检测版本，将继续执行..."
 } 

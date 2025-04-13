@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&logo=bookstack)](https://github.com/yuaotian/go-cursor-help/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/yuaotian/go-cursor-help?style=flat-square&logo=github)](https://github.com/yuaotian/go-cursor-help/stargazers)
 
-[🌟 English](README.md) | [🌏 中文](README_CN.md)
+[🌟 English](README.md) | [🌏 中文](README_CN.md) | [🌏 日本語](README_JP.md)
 
 <img src="https://ai-cursor.com/wp-content/uploads/2024/09/logo-cursor-ai-png.webp" alt="Cursor Logo" width="120"/>
 
@@ -15,9 +15,9 @@
 > ⚠️ **重要提示**
 > 
 > 本工具当前支持版本：
-> - ✅ Cursor v0.44.11 及以下版本
-> - ✅ Windows: 最新的 0.45.x 版本（已支持）
-> - ✅ Mac/Linux: 最新的 0.45.x 版本（已支持，欢迎测试并反馈问题）
+> - ✅ Cursor v0.45.x 及以下版本
+> - ✅ Windows: 最新的 0.47.x 版本（已支持）
+> - ✅ Mac/Linux: 最新的 0.47.x 版本（已支持，欢迎测试并反馈问题）
 >
 > 使用前请确认您的 Cursor 版本。
 
@@ -28,7 +28,7 @@
 
 ### 🌟 最新版本
 - v0.45.11 (2025-02-07) - 最新发布
-- v0.44.11 (2025-01-03) - 最稳定版本
+- v0.45.x (2025-01-03) - 最稳定版本
 
 [查看完整版本历史](CursorHistoryDown.md)
 
@@ -36,7 +36,7 @@
 
 ### 📥 直接下载链接
 
-**v0.44.11 (推荐稳定版)**
+**v0.45.x (推荐稳定版)**
 - Windows: [官方下载](https://downloader.cursor.sh/builds/250103fqxdt5u9z/windows/nsis/x64) | [镜像下载](https://download.todesktop.com/230313mzl4w4u92/Cursor%20Setup%200.44.11%20-%20Build%20250103fqxdt5u9z-x64.exe)
 - Mac: [Apple Silicon](https://dl.todesktop.com/230313mzl4w4u92/versions/0.44.11/mac/zip/arm64)
 
@@ -49,6 +49,98 @@
 > - 在修改前备份原始MAC地址
 > - 此修改可能会暂时影响网络连接
 > - 执行过程中可以选择跳过此步骤
+
+---
+
+### 📝 问题描述
+
+> 当您遇到以下任何消息时：
+
+#### 问题 1: 试用账号限制 <p align="right"><a href="#solution1"><img src="https://img.shields.io/badge/跳转到解决方案-Blue?style=plastic" alt="跳转到顶部"></a></p>
+
+```text
+Too many free trial accounts used on this machine.
+Please upgrade to pro. We have this limit in place
+to prevent abuse. Please let us know if you believe
+this is a mistake.
+```
+
+#### 问题 2: API密钥限制 <p align="right"><a href="#solution2"><img src="https://img.shields.io/badge/跳转到解决方案-green?style=plastic" alt="跳转到顶部"></a></p>
+
+```text
+[New Issue]
+
+Composer relies on custom models that cannot be billed to an API key.
+Please disable API keys and use a Pro or Business subscription.
+Request ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+#### 问题 3: 试用请求限制
+
+> 这表明您在VIP免费试用期间已达到使用限制：
+
+```text
+You've reached your trial request limit.
+```
+
+#### 问题 4: Claude 3.7 高负载 （High Load）  <p align="right"><a href="#solution4"><img src="https://img.shields.io/badge/跳转到解决方案-purple?style=plastic" alt="跳转到顶部"></a></p>
+
+```text
+High Load 
+We're experiencing high demand for Claude 3.7 Sonnet right now. Please upgrade to Pro, or switch to the
+'default' model, Claude 3.5 sonnet, another model, or try again in a few moments.
+```
+
+<br>
+
+<p id="solution2"></p>
+
+#### 解决方案：完全卸载Cursor并重新安装（API密钥问题）
+
+1. 下载 [Geek.exe 卸载工具[免费]](https://geekuninstaller.com/download)
+2. 完全卸载Cursor应用
+3. 重新安装Cursor应用
+4. 继续执行解决方案1
+
+<br>
+
+<p id="solution1"></p>
+
+> 临时解决方案：
+
+#### 解决方案 1: 快速重置（推荐）
+
+1. 关闭Cursor应用
+2. 运行机器码重置脚本（见下方安装说明）
+3. 重新打开Cursor继续使用
+
+#### 解决方案 2: 切换账号
+
+1. 文件 -> Cursor设置 -> 退出登录
+2. 关闭Cursor
+3. 运行机器码重置脚本
+4. 使用新账号登录
+
+#### 解决方案 3: 网络优化
+
+如果上述解决方案不起作用，请尝试：
+
+- 切换到低延迟节点（推荐区域：日本、新加坡、美国、香港）
+- 确保网络稳定性
+- 清除浏览器缓存并重试
+
+<p id="solution4"></p>
+
+#### 解决方案 4: Claude 3.7 访问问题（High Load ）
+
+如果您看到Claude 3.7 Sonnet的"High Load"（高负载）消息，这表明Cursor在一天中某些时段限制免费试用账号使用3.7模型。请尝试：
+
+1. 使用Gmail邮箱创建新账号，可能需要通过不同IP地址连接
+2. 尝试在非高峰时段访问（通常在早上5-10点或下午3-7点之间限制较少）
+3. 考虑升级到Pro版本获取保证访问权限
+4. 使用Claude 3.5 Sonnet作为备选方案
+
+> 注意：随着Cursor调整资源分配策略，这些访问模式可能会发生变化。
 
 ### 🚀 系统支持
 
@@ -86,7 +178,7 @@
 **macOS**
 
 ```bash
-curl -fsSL https://aizaozao.com/accelerate.php/https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh | sudo bash
+curl -fsSL https://aizaozao.com/accelerate.php/https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh -o ./cursor_mac_id_modifier.sh && sudo bash ./cursor_mac_id_modifier.sh && rm ./cursor_mac_id_modifier.sh
 ```
 
 **Linux**
@@ -271,8 +363,28 @@ Windows 用户可以手动禁用自动更新功能：
 2. 删除目录：`C:\Users\用户名\AppData\Local\cursor-updater`
 3. 创建同名文件：`cursor-updater`（不带扩展名）
 
-macOS/Linux 用户可以尝试在系统中找到类似的`cursor-updater`目录进行相同操作。
+Linux用户可以尝试在系统中找到类似的`cursor-updater`目录进行相同操作。
 
+MacOS用户按照以下步骤操作：
+
+```bash
+# 注意：经测试，此方法仅适用于0.45.11及以下版本，不支持0.46.*版本
+# 关闭所有 Cursor 进程
+pkill -f "Cursor"
+
+# 备份app-update.yml并创建空的只读文件代替原文件
+cd /Applications/Cursor.app/Contents/Resources
+mv app-update.yml app-update.yml.bak
+touch app-update.yml
+chmod 444 app-update.yml
+
+# 打开Cursor设置，将更新模式设置为“无”，该步骤必须执行，否则Cursor依然会自动检查更新
+# 步骤：Settings -> Application -> Update, 将Mode设置为none
+
+# 注意: cursor-updater修改方法可能已失效。但为了以防万一，还是删除更新目录并创建阻止文件
+rm -rf ~/Library/Application\ Support/Caches/cursor-updater
+touch ~/Library/Application\ Support/Caches/cursor-updater
+```
 </details>
 
 <details>
@@ -283,8 +395,30 @@ macOS/Linux 用户可以尝试在系统中找到类似的`cursor-updater`目录�
 - ✅ 错误处理和恢复
 </details>
 
+<details>
+<summary><b>重置 Cursor 免费试用</b></summary>
 
+### 使用 `cursor_free_trial_reset.sh` 脚本
 
+#### macOS
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_free_trial_reset.sh -o ./cursor_free_trial_reset.sh && sudo bash ./cursor_free_trial_reset.sh && rm ./cursor_free_trial_reset.sh
+```
+
+#### Linux
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_free_trial_reset.sh | sudo bash
+```
+
+#### Windows
+
+```powershell
+irm https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_free_trial_reset.sh | iex
+```
+
+</details>
 
 ## 联系方式
 
@@ -298,8 +432,8 @@ macOS/Linux 用户可以尝试在系统中找到类似的`cursor-updater`目录�
 </td>
 <td align="center">
 <b>微信交流群</b><br>
-<img src="img/wx_group4.jpg" width="250" alt="微信群二维码"><br>
-<small>7天内(3月1日前)有效，群满可以加公众号关注最新动态</small>
+<img src="img/qun-10.jpg" width="500" alt="WeChat"><br>
+<small>二维码7天内(4月15日前)有效，过期请加微信</small>
 </td>
 <td align="center">
 <b>公众号</b><br>

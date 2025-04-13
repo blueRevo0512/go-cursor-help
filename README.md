@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&logo=bookstack)](https://github.com/yuaotian/go-cursor-help/blob/master/LICENSE)
 [![Stars](https://img.shields.io/github/stars/yuaotian/go-cursor-help?style=flat-square&logo=github)](https://github.com/yuaotian/go-cursor-help/stargazers)
 
-[🌟 English](README.md) | [🌏 中文](README_CN.md)
+[🌟 English](README.md) | [🌏 中文](README_CN.md) | [🌏 日本語](README_JP.md)
 
 <img src="https://ai-cursor.com/wp-content/uploads/2024/09/logo-cursor-ai-png.webp" alt="Cursor Logo" width="120"/>
 
@@ -15,9 +15,9 @@
 > ⚠️ **IMPORTANT NOTICE**
 > 
 > This tool currently supports:
-> - ✅ Cursor v0.44.11 and below
-> - ✅ Windows: Latest 0.45.x versions (Supported)
-> - ✅ Mac/Linux: Latest 0.45.x versions (Supported, feedback welcome)
+> - ✅ Cursor v0.45.x and below
+> - ✅ Windows: Latest 0.47.x versions (Supported)
+> - ✅ Mac/Linux: Latest 0.47.x versions (Supported, feedback welcome)
 >
 > Please check your Cursor version before using this tool.
 
@@ -28,7 +28,7 @@
 
 ### 🌟 Latest Versions
 - v0.45.11 (2025-02-07) - Latest Release
-- v0.44.11 (2025-01-03) - Most Stable Release
+- v0.45.x (2025-01-03) - Most Stable Release
 
 [View Full Version History](CursorHistoryDown.md)
 
@@ -36,7 +36,7 @@
 
 ### 📥 Direct Download Links
 
-**v0.44.11 (Recommended Stable Version)**
+**v0.45.x (Recommended Stable Version)**
 - Windows: [Official](https://downloader.cursor.sh/builds/250103fqxdt5u9z/windows/nsis/x64) | [Mirror](https://download.todesktop.com/230313mzl4w4u92/Cursor%20Setup%200.44.11%20-%20Build%20250103fqxdt5u9z-x64.exe)
 - Mac: [Apple Silicon](https://dl.todesktop.com/230313mzl4w4u92/versions/0.44.11/mac/zip/arm64)
 
@@ -50,7 +50,7 @@
 > - This modification may temporarily affect network connectivity
 > - You can skip this step when prompted during execution
 >
-> 💾 **Download Cursor v0.44.11**
+> 💾 **Download Cursor v0.45.x**
 > 
 > Windows:
 > - [Download from Cursor Official](https://downloader.cursor.sh/builds/250103fqxdt5u9z/windows/nsis/x64)
@@ -84,11 +84,22 @@ Select `1` to automatically complete the disable operation.
 
 **macOS:**
 ```bash
+# NOTE: As tested, this method only works for version 0.45.11 and below.
 # Close Cursor
 pkill -f "Cursor"
-# Remove update directory and create blocking file
-rm -rf ~/Library/Application\ Support/cursor-updater
-touch ~/Library/Application\ Support/cursor-updater
+# Replacing app-update.yml with a blank/read-only file
+cd /Applications/Cursor.app/Contents/Resources
+mv app-update.yml app-update.yml.bak
+touch app-update.yml
+chmod 444 app-update.yml
+
+# Go to Settings -> Application -> Update, set Mode to none.
+# This must be done to prevent Cursor from checking for updates.
+
+# NOTE: The cursor-updater modification method may no longer be effective
+# In any case, remove update directory and create blocking file
+rm -rf ~/Library/Application\ Support/Caches/cursor-updater
+touch ~/Library/Application\ Support/Caches/cursor-updater
 ```
 
 **Linux:**
@@ -138,6 +149,14 @@ Request ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 You've reached your trial request limit.
 ```
 
+#### Issue 4: Claude 3.7 High Load <p align="right"><a href="#issue4"><img src="https://img.shields.io/badge/Move%20to%20Solution-purple?style=plastic" alt="Back To Top"></a></p>
+
+```text
+High Load 
+We're experiencing high demand for Claude 3.7 Sonnet right now. Please upgrade to Pro, or switch to the
+'default' model, Claude 3.5 sonnet, another model, or try again in a few moments.
+```
+
 <br>
 
 <p id="issue2"></p>
@@ -175,6 +194,17 @@ If the above solutions don't work, try:
 - Switch to low-latency nodes (Recommended regions: Japan, Singapore, US, Hong Kong)
 - Ensure network stability
 - Clear browser cache and retry
+
+#### Solution 4: Claude 3.7 Access Issue (High Load)
+
+If you see the "High Load" message for Claude 3.7 Sonnet, this indicates Cursor is limiting free trial accounts from using the 3.7 model during certain times of the day. Try:
+
+1. Switch to a new account created with Gmail, possibly connecting through a different IP address
+2. Try accessing during off-peak hours (typically 5-10 AM or 3-7 PM when restrictions are often lighter)
+3. Consider upgrading to Pro for guaranteed access
+4. Use Claude 3.5 Sonnet as a fallback option
+
+> Note: These access patterns may change as Cursor adjusts their resource allocation policies.
 
 ### 💻 System Support
 
@@ -216,7 +246,8 @@ If the above solutions don't work, try:
 **macOS**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh | sudo bash 
+# Method two
+curl -fsSL https://aizaozao.com/accelerate.php/https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh -o ./cursor_mac_id_modifier.sh && sudo bash ./cursor_mac_id_modifier.sh && rm ./cursor_mac_id_modifier.sh
 ```
 
 **Linux**
@@ -243,7 +274,7 @@ irm https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/
 **macOS**
 
 ```bash
-curl -fsSL https://aizaozao.com/accelerate.php/https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh | sudo bash
+curl -fsSL https://aizaozao.com/accelerate.php/https://raw.githubusercontent.com/yuaotian/go-cursor-help/refs/heads/master/scripts/run/cursor_mac_id_modifier.sh -o ./cursor_mac_id_modifier.sh && sudo bash ./cursor_mac_id_modifier.sh && rm ./cursor_mac_id_modifier.sh
 ```
 
 **Linux**
@@ -453,17 +484,33 @@ Modifying this registry key may affect:
 <b>If you find this helpful, consider buying me a spicy gluten snack (Latiao) as appreciation~ 💁☕️</b>
 <table>
 <tr>
+
+<td align="center">
+<b>微信赞赏</b><br>
+<img src="img/wx_zsm2.png" width="500" alt="微信赞赏码"><br>
+<small>要到饭咧？啊咧？啊咧？不给也没事~ 请随意打赏</small>
+</td>
+<td align="center">
+<b>支付宝赞赏</b><br>
+<img src="img/alipay.png" width="500" alt="支付宝赞赏码"><br>
+<small>如果觉得有帮助,来包辣条犒劳一下吧~</small>
+</td>
 <td align="center">
 <b>Alipay</b><br>
 <img src="img/alipay_scan_pay.jpg" width="500" alt="Alipay"><br>
 <em>1 Latiao = 1 AI thought cycle</em>
 </td>
 <td align="center">
+<b>WeChat</b><br>
+<img src="img/qun-10.jpg" width="500" alt="WeChat"><br>
+<em>二维码7天内(4月15日前)有效，过期请加微信</em>
+</td>
+<!-- <td align="center">
 <b>ETC</b><br>
-<img src="img/etc.png" width="200" alt="ETC Address"><br>
+<img src="img/etc.png" width="100" alt="ETC Address"><br>
 ETC: 0xa2745f4CD5d32310AC01694ABDB28bA32D125a6b
 </td>
-<td align="center">
+<td align="center"> -->
 </td>
 </tr>
 </table>

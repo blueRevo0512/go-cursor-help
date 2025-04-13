@@ -4,11 +4,11 @@
 set -e
 
 # 定义日志文件路径
-LOG_FILE="/tmp/cursor_mac_id_modifier.log"
+LOG_FILE="/tmp/cursor_free_trial_reset.log"
 
 # 初始化日志文件
 initialize_log() {
-    echo "========== Cursor ID 修改工具日志开始 $(date) ==========" > "$LOG_FILE"
+    echo "========== Cursor Free Trial Reset Tool Log Start $(date) ==========" > "$LOG_FILE"
     chmod 644 "$LOG_FILE"
 }
 
